@@ -16,4 +16,7 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+    font-family: Tahoma, Verdana, Helvetica, Arial;
+    font-size: 20pt;
+    font-weight: bold;
 }

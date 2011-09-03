@@ -1,3 +1,6 @@
+var couchClient = require('couch-client');
+var client = couchClient('http://craftify.iriscouch.com/movr');
+
 var http = require('http');
 var socket = require('socket.io');
 var clients = [];
@@ -12,14 +15,15 @@ var io = socket.listen(app);
 app.listen(process.env.C9_PORT, "0.0.0.0");
 
 console.log('Server running at http://movr.pjvds.c9.io:'+process.env.C9_PORT);
-
 io.sockets.on('connection', function (socket) {
     clients.push(socket);
   
     socket.on('spawn', function (data) {
+        client.save(data);
+
         clients.forEach(function(client){
             if(client != socket){
-                client.emit('spawn', data);    
+                client.emit('spawn', data);
             }
         });
     });
