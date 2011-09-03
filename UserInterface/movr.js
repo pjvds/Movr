@@ -22,7 +22,8 @@
             var newEntity = createEntity("#dummyEntity");
             console.log(newEntity);
             
-            newEntity.setPosition(100,100);
+            newEntity.setPosition(Math.random() * document.body.clientWidth ,
+                                  Math.random() * document.body.clientHeight);
         });
 
     });
