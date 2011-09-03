@@ -1,5 +1,6 @@
 var http = require('http');
 var socket = require('socket.io');
+var clients = [];
 
 var app = http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
@@ -13,8 +14,12 @@ app.listen(process.env.C9_PORT, "0.0.0.0");
 console.log('Server running at http://movr.pjvds.c9.io:'+process.env.C9_PORT);
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
+    clients.push(socket);
+  socket.on('spawn', function (data) {
     console.log(data);
+  });
+  
+io.sockets.on('disconnect', function (socket) {
+    delete clients[socket];
   });
 });

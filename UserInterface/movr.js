@@ -4,11 +4,7 @@
  * */
 
 var socket = io.connect('http://movr.pjvds.c9.io/');
-  socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
-  });
-
+ 
 (function (movr, $, undefined) {
 
     $(document).ready(function() {
@@ -16,13 +12,17 @@ var socket = io.connect('http://movr.pjvds.c9.io/');
         var body$ = $("body");
         console.log(body$);
         
-        var createEntity = function(id){    
+        var createEntity = function(id){
             var clone = $(id).clone();
             body$.append(clone);
             clone.removeClass("template");
-            
+            var pos = {};
             return {
+                getPosition: function() {
+                    return pos;
+                },
                 setPosition: function (x, y) {
+                    pos = { x: x, y: y};
                     clone.css("left", x).css("top", y);
                 }
             };
@@ -34,6 +34,8 @@ var socket = io.connect('http://movr.pjvds.c9.io/');
             
             newEntity.setPosition(Math.random() * document.body.clientWidth ,
                                   Math.random() * document.body.clientHeight);
+                                  
+            socket.emit('spawn', newEntity.getPosition());
         });
 
     });
