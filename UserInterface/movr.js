@@ -1,3 +1,13 @@
+/**
+ * Must see
+ * http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/
+ * */
+
+var socket = io.connect('http://movr.pjvds.c9.io/');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
 
 (function (movr, $, undefined) {
 
