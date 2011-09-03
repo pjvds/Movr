@@ -1,0 +1,13 @@
+.template {
+    display: none;
+    position: absolute;
+}
+
+.entity {
+    display: block;
+    position: absolute;
+}
+
+.entity.template {
+    display: none;
+}
