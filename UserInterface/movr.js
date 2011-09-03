@@ -16,7 +16,10 @@
         var createEntity = function(id){
             var clone = $(id).clone();
             clone.removeClass("template");
+            
             body$.append(clone);
+            
+            clone.draggable();
             
             var pos = {};
             var elementId = guidGenerator();
