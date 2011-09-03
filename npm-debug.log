@@ -1,0 +1,31 @@
+info it worked if it ends with ok
+verbose cli [ '/home/cloud9/c9/support/node-c9-builds-v4/node-c9-sunos',
+verbose cli   '/home/ide_pjvds/workspaces/npm/bin/npm.js',
+verbose cli   'install',
+verbose cli   'socket.io',
+verbose cli   'Application/node_modules' ]
+info using npm@1.0.1rc6
+info using node@v0.4.5
+verbose config file /home/cloud9/.npmrc
+verbose config file /home/cloud9/c9/support/etc/npmrc
+info into /mnt/ws/users/pjvds/75151 [ 'socket.io', 'Application/node_modules' ]
+verbose cache add [ 'socket.io', null ]
+verbose cache add [ 'Application/node_modules', null ]
+info addNamed [ 'socket.io', '' ]
+verbose addNamed [ null, '' ]
+ERR! couldn't read package.json in Application/node_modules
+ERR! { stack: [Getter/Setter],
+ERR!   arguments: undefined,
+ERR!   type: undefined,
+ERR!   message: 'ENOENT, No such file or directory \'Application/node_modules/package.json\'',
+ERR!   errno: 2,
+ERR!   code: 'ENOENT',
+ERR!   path: 'Application/node_modules/package.json' }
+ERR! Report this *entire* log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System SunOS 5.11
+ERR! command "/home/cloud9/c9/support/node-c9-builds-v4/node-c9-sunos" "/home/ide_pjvds/workspaces/npm/bin/npm.js" "install" "socket.io" "Application/node_modules"
+verbose exit [ 2, true ]
