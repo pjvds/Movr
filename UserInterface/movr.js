@@ -15,9 +15,12 @@
         
         var createEntity = function(id){
             var clone = $(id).clone();
-            body$.append(clone);
             clone.removeClass("template");
+            body$.append(clone);
+            
             var pos = {};
+            var elementId = guidGenerator();
+            
             return {
                 getPosition: function() {
                     return pos;
@@ -25,6 +28,9 @@
                 setPosition: function (x, y) {
                     pos = { x: x, y: y};
                     clone.css("left", x).css("top", y);
+                },
+                getData: function() {
+                    return { elementId: elementId, position: pos };
                 }
             };
         };
@@ -35,8 +41,11 @@
             
             newEntity.setPosition(Math.random() * document.body.clientWidth ,
                                   Math.random() * document.body.clientHeight);
-                                  
-            socket.emit('spawn', newEntity.getPosition());
+                   
+            var data = newEntity.getData();
+            console.log(data);
+            
+            socket.emit('spawn', data);
         });
 
         socket.on('spawn', function(data) {
@@ -45,6 +54,13 @@
             
             newEntity.setPosition(data.x, data.y);
         });
+        
+        var guidGenerator = function() {
+            var S4 = function() {
+               return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+            };
+            return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        };
     });
 
 }(window.movr = window.movr || {}, jQuery));

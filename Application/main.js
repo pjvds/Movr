@@ -1,13 +1,15 @@
-var couchClient = require('couch-client');
-var client = couchClient('http://craftify.iriscouch.com/movr');
+var couch = require('couch-client')('http://craftify.iriscouch.com/movr');
 
 var http = require('http');
 var socket = require('socket.io');
 var clients = [];
 
 var app = http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    
+    
+    
+    res.end('Hello World\n');
 });
 
 var io = socket.listen(app);
@@ -19,7 +21,8 @@ io.sockets.on('connection', function (socket) {
     clients.push(socket);
   
     socket.on('spawn', function (data) {
-        client.save(data);
+        data.timestamp = new Date().getTime();
+        couch.save(data);
 
         clients.forEach(function(client){
             if(client != socket){
