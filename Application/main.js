@@ -37,7 +37,7 @@ io.sockets.on('connection', function (socket) {
 
         clients.forEach(function(client){
             if(client != socket){
-                client.emit('spawn', data);
+                client.emit('moved', data);
             }
         });
     });

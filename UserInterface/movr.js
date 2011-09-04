@@ -24,7 +24,7 @@
                 pos = { x: clone.css("left"), y: clone.css("top") };
                 socket.emit('moved', entity.getData());
                 
-                console.log(entity.getData());
+                console.log('moved message send.');
     		}});
             
             var entity = new Entity(entityId, clone);
