@@ -14,17 +14,16 @@
         console.log(socket);
         
         var createEntity = function(id){
+            $(id).draggable();
             var clone = $(id).clone();
             clone.removeClass("template");
             
             body$.append(clone);
             
-            clone.draggable();
-            
             var pos = {};
             var elementId = guidGenerator();
             
-            return {
+            var entity = {
                 getPosition: function() {
                     return pos;
                 },
@@ -36,6 +35,21 @@
                     return { elementId: elementId, position: pos };
                 }
             };
+            
+            clone.entity = entity;
+            
+            clone.draggable({ drag: function() {
+                pos = { x: clone.css("left"), y: clone.css("top") };
+                socket.emit('moved', entity.getData());
+                
+                console.log(entity.getData());
+    		}});
+            
+            socket.on('moved', function(data) {
+                entity.setPosition(data.x, data.y);
+            });
+            
+            return entity;
         };
         
         $("#spawnCommand").click(function () {

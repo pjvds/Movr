@@ -6,9 +6,7 @@ var clients = [];
 
 var app = http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    
-    
-    
+
     res.end('Hello World\n');
 });
 
@@ -21,6 +19,19 @@ io.sockets.on('connection', function (socket) {
     clients.push(socket);
   
     socket.on('spawn', function (data) {
+        data.name = 'spawned';
+        data.timestamp = new Date().getTime();
+        couch.save(data);
+
+        clients.forEach(function(client){
+            if(client != socket){
+                client.emit('spawn', data);
+            }
+        });
+    });
+    
+    socket.on('moved', function (data) {
+        data.name = 'moved';
         data.timestamp = new Date().getTime();
         couch.save(data);
 
