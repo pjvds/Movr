@@ -8,35 +8,17 @@
     $(document).ready(function() {
         
         var body$ = $("body");
-        console.log(body$);
+        var entities = [];
         
         var socket = io.connect('http://movr.pjvds.c9.io/');
         console.log(socket);
         
-        var createEntity = function(id){
+        var createEntity = function(id, pos){
             $(id).draggable();
+            var entityId = guidGenerator();
             var clone = $(id).clone();
             clone.removeClass("template");
-            
             body$.append(clone);
-            
-            var pos = {};
-            var elementId = guidGenerator();
-            
-            var entity = {
-                getPosition: function() {
-                    return pos;
-                },
-                setPosition: function (x, y) {
-                    pos = { x: x, y: y};
-                    clone.css("left", x).css("top", y);
-                },
-                getData: function() {
-                    return { elementId: elementId, position: pos };
-                }
-            };
-            
-            clone.entity = entity;
             
             clone.draggable({ drag: function() {
                 pos = { x: clone.css("left"), y: clone.css("top") };
@@ -45,20 +27,19 @@
                 console.log(entity.getData());
     		}});
             
-            socket.on('moved', function(data) {
-                entity.setPosition(data.x, data.y);
-            });
+            var entity = new Entity(entityId, clone);
+            entity.setPosition(pos.x, pos.y);
+            
+            entities[entity.id]=entity;
             
             return entity;
         };
         
         $("#spawnCommand").click(function () {
-            var newEntity = createEntity("#dummyEntity");
-            console.log(newEntity);
+            var pos = { x: Math.random() * document.body.clientWidth,
+                        y: Math.random() * document.body.clientHeight };
             
-            newEntity.setPosition(Math.random() * document.body.clientWidth ,
-                                  Math.random() * document.body.clientHeight);
-                   
+            var newEntity = createEntity("#dummyEntity", pos);
             var data = newEntity.getData();
             console.log(data);
             
@@ -66,10 +47,19 @@
         });
 
         socket.on('spawn', function(data) {
-            var newEntity = createEntity("#dummyEntity");
+            console.log('spawned');
+            var newEntity = createEntity("#dummyEntity", data.position);
             console.log(newEntity);
             
-            newEntity.setPosition(data.x, data.y);
+            //newEntity.setPosition(data.position.x, data.position.y);
+        });
+        
+        socket.on('moved', function(data) {
+            console.log('moved:');
+            console.log(data);
+            
+            var movedEntity = entities[data.id];
+            movedEntity.setPosition(data.position.x, data.position.y);
         });
         
         var guidGenerator = function() {
@@ -79,5 +69,22 @@
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         };
     });
+    
+    function Entity(id, element){
+        this.id = id;
+        this.element = element;
+        
+        this.getPosition = function() {
+            return { x: element.css("left"), y: element.css("top") };
+        };
+        
+        this.setPosition = function (x, y) {
+            element.css("left", x).css("top", y);
+        };
+        
+        this.getData = function() {
+            return { id: this.id, position: this.getPosition() };
+        };
+    }
 
 }(window.movr = window.movr || {}, jQuery));
