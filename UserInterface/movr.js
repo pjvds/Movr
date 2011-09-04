@@ -13,9 +13,8 @@
         var socket = io.connect('http://movr.pjvds.c9.io/');
         console.log(socket);
         
-        var createEntity = function(id, pos){
+        var createEntity = function(id, entityId, pos){
             $(id).draggable();
-            var entityId = guidGenerator();
             var clone = $(id).clone();
             clone.removeClass("template");
             body$.append(clone);
@@ -30,7 +29,7 @@
             var entity = new Entity(entityId, clone);
             entity.setPosition(pos.x, pos.y);
             
-            entities[entity.id]=entity;
+            entities[entityId]=entity;
             
             return entity;
         };
@@ -39,7 +38,8 @@
             var pos = { x: Math.random() * document.body.clientWidth,
                         y: Math.random() * document.body.clientHeight };
             
-            var newEntity = createEntity("#dummyEntity", pos);
+            var entityId = guidGenerator();
+            var newEntity = createEntity("#dummyEntity", entityId, pos);
             var data = newEntity.getData();
             console.log(data);
             
@@ -48,10 +48,8 @@
 
         socket.on('spawn', function(data) {
             console.log('spawned');
-            var newEntity = createEntity("#dummyEntity", data.position);
+            var newEntity = createEntity("#dummyEntity", data.id, data.position);
             console.log(newEntity);
-            
-            //newEntity.setPosition(data.position.x, data.position.y);
         });
         
         socket.on('moved', function(data) {
@@ -59,6 +57,9 @@
             console.log(data);
             
             var movedEntity = entities[data.id];
+            
+            console.log(movedEntity);
+            
             movedEntity.setPosition(data.position.x, data.position.y);
         });
         
